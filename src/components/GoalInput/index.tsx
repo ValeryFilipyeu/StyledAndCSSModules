@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 import Button from "../ui/Button";
+import Input from "../ui/Input";
+
 import styles from "./index.module.css";
 
 // const FormControl = styled.div`
@@ -38,6 +40,8 @@ const GoalInput: React.FC<GoalInputProps> = (props) => {
   const [enteredValue, setEnteredValue] = useState("");
   const [isValid, setIsValid] = useState(true);
 
+  const goalInputRef = useRef<HTMLInputElement>(null);
+
   const goalInputChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -51,6 +55,7 @@ const GoalInput: React.FC<GoalInputProps> = (props) => {
     event.preventDefault();
     if (enteredValue.trim().length === 0) {
       setIsValid(false);
+      goalInputRef.current?.focus();
       return;
     }
     props.onAddGoal(enteredValue);
@@ -62,7 +67,7 @@ const GoalInput: React.FC<GoalInputProps> = (props) => {
         className={`${styles["form-control"]} ${!isValid && styles.invalid}`}
       >
         <label>Goal</label>
-        <input type="text" onChange={goalInputChangeHandler} />
+        <Input type="text" onChange={goalInputChangeHandler} forwardRef={goalInputRef} />
       </div>
       <Button type="submit">Add Goal</Button>
     </form>
